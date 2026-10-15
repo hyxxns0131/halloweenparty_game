@@ -219,7 +219,7 @@ details, summary { color: var(--muted); }
   .comment-row { flex-direction: column; }
 }
 
-/* ---------------- 사탕 뺏기 (넌센스 퀴즈) ---------------- */
+/* ---------------- 사탕 뺏기 (야바위) ---------------- */
 .steal-btn {
   background: linear-gradient(135deg, #8d5cff, #5b2fc9); border-color: transparent; color: #fff; font-weight: 800;
   box-shadow: 0 6px 22px rgba(120, 70, 255, 0.4); animation: stealPulse 2.4s ease-in-out infinite;
@@ -240,23 +240,44 @@ details, summary { color: var(--muted); }
 .quiz-rules li.muted { color: var(--muted); font-size: 13px; background: transparent; border-style: dashed; }
 .quiz-rules b { color: #ffc58f; }
 .dialog.quiz .wide { width: 100%; padding: 14px; font-size: 16px; }
-.quiz-card { position: relative; padding: 26px 20px 22px; border-radius: 16px; background: linear-gradient(160deg, rgba(255, 140, 50, 0.16), rgba(120, 70, 255, 0.12)); border: 1px solid rgba(255, 140, 50, 0.35); text-align: center; }
-.quiz-no { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--orange); color: #1a0a00; font-weight: 900; font-size: 13px; padding: 4px 12px; border-radius: 20px; box-shadow: var(--glow); }
-.quiz-card p { margin: 0; font-size: 21px; font-weight: 800; line-height: 1.5; color: #fff; word-break: keep-all; }
-.quiz-input-row { margin: 16px 0 4px; }
-.quiz-input-row input { width: 100%; font-size: 18px; padding: 14px 16px; border-radius: 12px; background: var(--field); color: var(--ink); border: 1px solid rgba(255, 140, 50, 0.4); text-align: center; }
-.quiz-input-row input:focus { outline: none; box-shadow: 0 0 0 3px rgba(255, 140, 50, 0.3); }
 .quiz-result { text-align: center; }
 .quiz-verdict { font-size: 34px; font-weight: 900; margin: 4px 0 6px; }
 .quiz-result.win .quiz-verdict { color: #9ff0b0; text-shadow: 0 0 20px rgba(120, 230, 140, 0.5); }
 .quiz-result.lose .quiz-verdict { color: #ff9b9b; text-shadow: 0 0 20px rgba(255, 90, 90, 0.45); animation: shake 0.45s; }
 @keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
-.quiz-your { margin: 0 0 12px; color: var(--muted); font-size: 13px; min-height: 1em; }
-.quiz-answer-box { display: grid; gap: 4px; padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line); }
-.quiz-answer-box span { font-size: 12px; color: var(--muted); letter-spacing: 2px; }
-.quiz-answer-box b { font-size: 22px; color: #ffc58f; }
-.quiz-answer-box small { color: var(--muted); font-size: 13px; }
 .quiz-outcome { margin: 14px 0 6px; font-size: 15px; font-weight: 700; line-height: 1.5; }
 .quiz-result.win .quiz-outcome { color: #c9f7d3; }
 .quiz-result.lose .quiz-outcome { color: #ffd0d0; }
-#quizStart:disabled { opacity: 0.6; }
+
+.dialog.shell { width: min(640px, calc(100vw - 24px)); }
+.shell-status { margin: 0 0 10px; text-align: center; font-size: 16px; font-weight: 800; color: #ffc58f; min-height: 1.4em; }
+.shell-status.busy { color: #c9adff; animation: statusPulse 0.6s ease-in-out infinite; }
+.shell-status.pick { color: #9ff0b0; }
+.shell-status.win { color: #9ff0b0; }
+.shell-status.lose { color: #ff9b9b; }
+@keyframes statusPulse { 50% { opacity: 0.55; } }
+.shell-stage {
+  position: relative; width: 100%; aspect-ratio: 5 / 2.7; border-radius: 18px; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 120%, rgba(255, 140, 50, 0.22), transparent 60%), linear-gradient(180deg, #2a1640, #160c22);
+  border: 1px solid rgba(255, 140, 50, 0.3); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+.cup {
+  position: absolute; width: 16%; aspect-ratio: 100 / 112; padding: 0; border: 0; background: transparent;
+  transform: translate(-50%, -50%); transition-property: left, top; transition-timing-function: ease-in-out;
+  cursor: default; z-index: 1;
+}
+.cup:hover { background: transparent; }
+.cup:disabled { opacity: 1; cursor: default; }
+.cup.moving { z-index: 3; }
+.cup-shell { position: absolute; inset: 0; display: block; transition: transform 0.32s cubic-bezier(0.3, 1.4, 0.5, 1); z-index: 2; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45)); }
+.cup-shell svg { width: 100%; height: 100%; display: block; }
+.cup.lifted .cup-shell { transform: translateY(-46%) rotate(-6deg); }
+.cup-candy { position: absolute; left: 50%; bottom: 2%; transform: translateX(-50%); font-size: clamp(22px, 5vw, 34px); z-index: 1; filter: drop-shadow(0 0 10px rgba(255, 200, 80, 0.9)); }
+.shell-stage.shuffling .cup-shell { filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45)) blur(0.3px); }
+.shell-stage.pickable .cup { cursor: pointer; }
+.shell-stage.pickable .cup:hover .cup-shell, .shell-stage.pickable .cup:focus-visible .cup-shell { transform: translateY(-8%) scale(1.06); filter: drop-shadow(0 0 14px rgba(255, 160, 60, 0.75)); }
+.cup:focus-visible { outline: none; }
+.cup.chosen .cup-shell svg { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6)); }
+.cup.answer::after { content: '여기!'; position: absolute; left: 50%; top: -22%; transform: translateX(-50%); font-size: 12px; font-weight: 900; color: #1a0a00; background: #9ff0b0; padding: 2px 8px; border-radius: 10px; z-index: 4; white-space: nowrap; }
+#shellResult { margin-top: 12px; }
+#shellStart:disabled, #shellAgain:disabled { opacity: 0.6; }

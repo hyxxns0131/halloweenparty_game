@@ -9,3 +9,5 @@ readme.md
 .env*
 .vercel
 supabase
+quiz.txt
+skills-lock.json

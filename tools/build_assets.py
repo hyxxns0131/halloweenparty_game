@@ -170,25 +170,7 @@ def data_url(path):
     return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
 
 
-def build_quiz():
-    """quiz.txt → js/quiz.js (file:// 에서도 퀴즈를 읽을 수 있게 문자열로 묶는다)"""
-    src = ROOT / "quiz.txt"
-    if not src.exists():
-        return
-    text = src.read_text(encoding="utf-8")
-    out = ROOT / "js" / "quiz.js"
-    out.write_text(
-        "/* 자동 생성 파일 — quiz.txt 를 고친 뒤 python tools/build_assets.py 로 다시 만드세요. */\n"
-        "window.QUIZ_TEXT = " + json.dumps(text, ensure_ascii=False) + ";\n",
-        encoding="utf-8",
-    )
-    print("wrote", out.relative_to(ROOT))
-
-
 def main():
-    build_quiz()
-    if "--quiz-only" in sys.argv:
-        return
     if len(sys.argv) > 1 and not sys.argv[1].startswith("--"):
         extract_reference(sys.argv[1])
 

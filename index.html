@@ -192,37 +192,31 @@
     </form>
   </dialog>
 
-  <dialog id="quizDialog" class="dialog quiz">
+  <dialog id="shellDialog" class="dialog quiz shell">
     <div class="quiz-head">
-      <div><div class="eyebrow">CANDY HEIST · NONSENSE QUIZ</div><h2>🍬 사탕 뺏기</h2></div>
-      <div class="quiz-mine" title="내 작품이 가진 사탕">내 사탕 <b id="quizMine">🍬 0</b></div>
-      <button type="button" class="quiz-x" data-quiz-close aria-label="닫기">✕</button>
+      <div><div class="eyebrow">CANDY HEIST · SHELL GAME</div><h2>🍬 사탕 뺏기 · 야바위</h2></div>
+      <div class="quiz-mine" title="내 작품이 가진 사탕">내 사탕 <b id="shellMine">🍬 0</b></div>
+      <button type="button" class="quiz-x" data-shell-close aria-label="닫기">✕</button>
     </div>
 
-    <div id="quizIntro">
+    <div id="shellIntro">
       <ul class="quiz-rules">
-        <li><b>넌센스 퀴즈</b> <span id="quizCount">52</span>문제 중 하나가 랜덤으로 나와요. 답은 직접 적어요!</li>
+        <li><b>컵 10개</b> 중 하나에 사탕을 넣고 <b>엄청 빠르게</b> 섞어요. 사탕이 든 컵을 맞혀보세요!</li>
         <li class="good">🎉 맞히면 → 다른 사람의 사탕 <b>1개</b>를 랜덤으로 뺏어와요</li>
-        <li class="bad">😱 틀리면 → 정답을 알려주고, 내 사탕 <b>1개</b>가 랜덤으로 다른 사람에게 넘어가요</li>
-        <li class="muted">문제를 본 뒤 창을 닫으면 포기(오답)로 처리돼요.</li>
+        <li class="bad">😱 틀리면 → 내 사탕 <b>1개</b>가 랜덤으로 다른 사람에게 넘어가요</li>
+        <li class="muted">섞기 시작한 뒤 창을 닫으면 포기(틀림)로 처리돼요.</li>
       </ul>
-      <button type="button" class="primary wide" id="quizStart">🎃 도전하기</button>
+      <button type="button" class="primary wide" id="shellStart">🎃 도전하기</button>
     </div>
 
-    <form id="quizForm" autocomplete="off"><div id="quizAsk" hidden>
-      <div class="quiz-card"><span class="quiz-no" id="quizNo">Q1</span><p id="quizQuestion"></p></div>
-      <div class="quiz-input-row">
-        <input type="text" id="quizAnswer" maxlength="40" placeholder="정답을 적어주세요" aria-label="정답 입력">
+    <div id="shellPlay" hidden>
+      <p class="shell-status" id="shellStatus" aria-live="polite"></p>
+      <div class="shell-stage" id="shellStage"></div>
+      <div id="shellResult" class="quiz-result" hidden>
+        <div class="quiz-verdict" id="shellVerdict"></div>
+        <p class="quiz-outcome" id="shellOutcome"></p>
+        <div class="dialog-actions"><button type="button" data-shell-close>닫기</button><button type="button" class="primary" id="shellAgain">한 번 더!</button></div>
       </div>
-      <div class="dialog-actions"><button type="button" id="quizGiveUp">포기하기</button><button type="submit" class="primary" id="quizSubmit">정답 제출</button></div>
-    </div></form>
-
-    <div id="quizResult" class="quiz-result" hidden>
-      <div class="quiz-verdict" id="quizVerdict"></div>
-      <p class="quiz-your" id="quizYour"></p>
-      <div class="quiz-answer-box"><span>정답</span><b id="quizRealAnswer"></b><small id="quizRealNote"></small></div>
-      <p class="quiz-outcome" id="quizOutcome"></p>
-      <div class="dialog-actions"><button type="button" data-quiz-close>닫기</button><button type="button" class="primary" id="quizAgain">한 번 더!</button></div>
     </div>
   </dialog>
 
@@ -235,8 +229,7 @@
 <script src="js/customizer.js"></script>
 <script src="js/export.js"></script>
 <script src="js/voting.js"></script>
-<script src="js/quiz.js"></script>
-<script src="js/quiz-game.js"></script>
+<script src="js/shell-game.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
