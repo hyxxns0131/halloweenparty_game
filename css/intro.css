@@ -1,0 +1,43 @@
+/* =========================================================
+ * intro.css — 촛불이 켜지는 입장 화면 (레퍼런스 그대로)
+ * ========================================================= */
+/* AX Halloween: candlelight entrance */
+body.intro-locked{overflow:hidden;background:#060408}
+#studioApp[aria-hidden="true"]{visibility:hidden}
+.party-intro{position:fixed;inset:0;z-index:500;background:#060408;color:#f8ead4;display:grid;place-items:center;isolation:isolate;overflow:hidden;opacity:1;transition:opacity .8s ease}
+.party-intro[hidden]{display:none}.party-intro.leaving{opacity:0;pointer-events:none}
+.intro-atmosphere{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 48%,#27110755,transparent 60%),radial-gradient(ellipse at 50% 100%,#20132b55,transparent 65%);opacity:0;transition:opacity 3s ease;pointer-events:none}
+.party-intro.lit .intro-atmosphere{opacity:1}
+.intro-scene{position:absolute;inset:0;display:block;overflow:hidden;opacity:1;transition:opacity 1.7s ease;pointer-events:none}
+.intro-scene canvas{position:absolute;display:block;left:50%;top:50%;width:min(100vw,110vh);height:min(100vw,110vh);max-width:none;transform:translate(-50%,-50%);object-fit:contain;object-position:center}
+.party-intro.scene-out .intro-scene{opacity:0}
+.intro-content{position:relative;width:min(900px,90vw);text-align:center;padding:30px 0}
+.intro-mark{font-size:13px;color:#ba925e;letter-spacing:.32em;margin-bottom:28px;opacity:0;transform:translateY(12px);transition:opacity 1.4s ease,transform 1.4s ease}
+.intro-welcome{font-size:clamp(24px,4.3vw,52px);font-weight:650;letter-spacing:-.04em;line-height:1.65;margin:0;opacity:0;transform:translateY(18px);transition:opacity 1.5s ease,transform 1.5s ease;text-wrap:balance}
+.intro-welcome strong{color:#ffb762;font-weight:750}
+.party-intro.welcome .intro-mark,.party-intro.welcome .intro-welcome{opacity:1;transform:translateY(0)}
+.intro-entry{margin-top:38px;opacity:0;transform:translateY(16px);transition:opacity 1.2s ease,transform 1.2s ease;visibility:hidden}
+.party-intro.question .intro-entry{opacity:1;transform:translateY(0);visibility:visible}
+.intro-question{font-size:clamp(18px,2vw,23px);color:#c9bcb0;font-weight:400;letter-spacing:.02em;margin:0 0 24px}
+.intro-yes{background:transparent;border:1px solid #d9974c99;color:#ffd39d;font-size:16px;letter-spacing:.22em;font-weight:650;padding:15px 48px;border-radius:5px;min-height:52px;box-shadow:0 0 30px #cc6f0710;transition:background .3s,box-shadow .3s,transform .3s}
+.intro-yes:hover{background:#d5831d22;box-shadow:0 0 36px #ff9e3425}.intro-yes:focus-visible{outline:2px solid #ffd39d;outline-offset:6px}
+.intro-footer{position:absolute;bottom:max(25px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:11px;letter-spacing:.25em;color:#73645a;opacity:0;transition:opacity 1.6s ease;pointer-events:none}.party-intro.welcome .intro-footer{opacity:1}
+@media(max-width:600px){.intro-scene canvas{width:100vw;height:100vw;left:50%;top:50%;transform:translate(-50%,-50%);object-fit:contain}.intro-welcome{font-size:28px}.intro-mark{font-size:11px;margin-bottom:22px}.intro-entry{margin-top:30px}.intro-content{width:88vw}}
+@media(prefers-reduced-motion:reduce){.party-intro,.intro-scene,.intro-atmosphere,.intro-mark,.intro-welcome,.intro-entry,.intro-footer{transition:none}.intro-yes{transition:none}}
+
+
+/* A haunted invitation: local Korean calligraphic and serif fonts. */
+.intro-content{padding:45px 0}
+.intro-content::before{content:"";position:absolute;inset:-80px -8vw;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,#57210817,transparent 65%);filter:blur(20px)}
+.intro-mark{font-family:Georgia,'Times New Roman',serif;font-size:12px;letter-spacing:.48em;color:#a98564;margin-bottom:32px}
+.intro-welcome{font-family:'Gungsuh','궁서','Batang','바탕','AppleMyungjo',Georgia,serif;font-weight:400;line-height:1.9;letter-spacing:.09em;color:#e6d4b9}
+.intro-welcome-lead{display:block;font-size:clamp(15px,2vw,22px);letter-spacing:.22em;color:#bca28b;margin-bottom:12px;text-shadow:0 0 18px #c66c2640}
+.intro-welcome-main{display:block;font-size:clamp(29px,4.5vw,58px);letter-spacing:.1em;line-height:1.65;text-shadow:1px 2px 0 #301011,0 0 8px #dca04e24,0 0 34px #cb65193d,0 7px 36px #000;word-break:keep-all}
+.intro-entry{margin-top:40px}
+.intro-entry::before{content:"";display:block;width:100px;height:1px;margin:0 auto 28px;background:linear-gradient(90deg,transparent,#ae794c88,transparent)}
+.intro-question{font-family:'Gungsuh','궁서','Batang','바탕','AppleMyungjo',Georgia,serif;letter-spacing:.14em;font-size:clamp(17px,2vw,22px);color:#c4a38b;text-shadow:0 0 20px #a8483045;margin-bottom:27px}
+.intro-yes{position:relative;font-family:Georgia,'Times New Roman',serif;font-size:23px;letter-spacing:.28em;padding:12px 44px 12px 50px;min-width:158px;border-radius:0;color:#e6b878;border-color:#9d652d7a;background:linear-gradient(180deg,#2b160c30,#14080a30);text-shadow:0 0 16px #e57d4440;box-shadow:inset 0 0 20px #b6541210,0 0 30px #8c381b12}
+.intro-yes:hover{background:#74341828;border-color:#e2a663aa;color:#ffe1ac;box-shadow:inset 0 0 22px #b654121b,0 0 35px #a957242b;transform:translateY(-2px)}
+.intro-footer{font-family:Georgia,'Times New Roman',serif;letter-spacing:.32em;color:#6e5b51}
+@media(max-width:600px){.intro-welcome-lead{font-size:15px;letter-spacing:.15em}.intro-welcome-main{font-size:30px;letter-spacing:.06em}.intro-question{font-size:18px;letter-spacing:.12em}.intro-mark{font-size:10px;letter-spacing:.3em;margin-bottom:28px}.intro-entry{margin-top:30px}}
+@media(max-height:600px){.intro-content{padding:15px 0}.intro-mark{margin-bottom:14px}.intro-welcome-lead{margin-bottom:6px}.intro-welcome-main{font-size:36px}.intro-entry{margin-top:15px}.intro-entry::before{margin-bottom:15px}.intro-question{margin-bottom:15px}.intro-footer{bottom:10px}}

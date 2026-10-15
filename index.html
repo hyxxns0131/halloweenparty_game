@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pumpkin Studio — AX 할로윈 파티</title>
+<meta name="description" content="나만의 잭오랜턴 피규어를 조립하고, 실시간 투표로 파티 베스트 드레서를 뽑아보세요!">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
+<link rel="stylesheet" href="css/studio.css">
+<link rel="stylesheet" href="css/intro.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/theme.css">
+</head>
+<body class="intro-locked">
+
+<!-- ================= Phase 1: 인트로 ================= -->
+<section id="partyIntro" class="party-intro" aria-label="AX 할로윈 파티 입장" aria-busy="true">
+  <div class="intro-atmosphere" aria-hidden="true"></div>
+  <div class="intro-scene" aria-hidden="true"><canvas id="introPumpkin" width="1000" height="1000"></canvas></div>
+  <div class="intro-content">
+    <div class="intro-mark">AX · HALLOWEEN PARTY</div>
+    <h2 class="intro-welcome" id="introWelcome"><span class="intro-welcome-lead">AX 할로윈 파티에 오신</span><span class="intro-welcome-main">여러분을 환영합니다</span></h2>
+    <div class="intro-entry"><p class="intro-question" id="introQuestion">입장하시겠습니까?</p><button type="button" id="enterParty" class="intro-yes" aria-describedby="introQuestion" disabled>YES</button></div>
+  </div>
+  <div class="intro-footer" aria-hidden="true">A LITTLE MAGIC IN THE DARK</div>
+</section>
+
+<div id="studioApp" inert aria-hidden="true">
+  <div class="spooky-bg" aria-hidden="true"><div class="scene"></div><div class="bat b1"><svg viewBox="0 0 64 28" fill="currentColor"><path d="M32 8c2-3 3-5 3-7l2 4c4-2 9-3 14-1 4 1 8 4 12 9-4-1-8 0-10 3-2-2-6-3-9-1-2-1-4 0-5 2-2 0-4 3-5 6-1-3-3-6-5-6-1-2-3-3-5-2-3-2-7-1-9 1-2-3-6-4-10-3 4-5 8-8 12-9 5-2 10-1 14 1l2-4c0 2 1 4 3 7z"/></svg></div><div class="bat b2"><svg viewBox="0 0 64 28" fill="currentColor"><path d="M32 8c2-3 3-5 3-7l2 4c4-2 9-3 14-1 4 1 8 4 12 9-4-1-8 0-10 3-2-2-6-3-9-1-2-1-4 0-5 2-2 0-4 3-5 6-1-3-3-6-5-6-1-2-3-3-5-2-3-2-7-1-9 1-2-3-6-4-10-3 4-5 8-8 12-9 5-2 10-1 14 1l2-4c0 2 1 4 3 7z"/></svg></div><div class="bat b3"><svg viewBox="0 0 64 28" fill="currentColor"><path d="M32 8c2-3 3-5 3-7l2 4c4-2 9-3 14-1 4 1 8 4 12 9-4-1-8 0-10 3-2-2-6-3-9-1-2-1-4 0-5 2-2 0-4 3-5 6-1-3-3-6-5-6-1-2-3-3-5-2-3-2-7-1-9 1-2-3-6-4-10-3 4-5 8-8 12-9 5-2 10-1 14 1l2-4c0 2 1 4 3 7z"/></svg></div><div class="bat b4"><svg viewBox="0 0 64 28" fill="currentColor"><path d="M32 8c2-3 3-5 3-7l2 4c4-2 9-3 14-1 4 1 8 4 12 9-4-1-8 0-10 3-2-2-6-3-9-1-2-1-4 0-5 2-2 0-4 3-5 6-1-3-3-6-5-6-1-2-3-3-5-2-3-2-7-1-9 1-2-3-6-4-10-3 4-5 8-8 12-9 5-2 10-1 14 1l2-4c0 2 1 4 3 7z"/></svg></div><div class="fog"></div><div class="fog f2"></div></div>
+  <header>
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">🎃</div>
+      <div><div class="wordmark">pumpkin<span> studio.</span></div><div class="edition">HALLOWEEN PARTY EDITION</div></div>
+    </div>
+    <nav class="view-nav" aria-label="화면 전환">
+      <button type="button" class="active" data-view="studio">꾸미기</button>
+      <button type="button" data-view="gallery">🏆 명예의 전당</button>
+    </nav>
+    <div class="header-right">
+      <span class="tag" id="syncTag" title="">Make it spooky. Make it you.</span>
+      <button class="primary" id="saveTop">↓ 이미지 저장</button>
+    </div>
+  </header>
+
+  <!-- ================= Phase 2: 메인 스튜디오 ================= -->
+  <main id="studioView">
+    <div class="intro">
+      <div>
+        <div class="eyebrow">YOUR LITTLE MONSTER</div>
+        <h1>최고의 호박을 <em>만들자</em></h1>
+        <p>얼굴형과 표정을 고르고, 옷을 입히고, 소품을 더해 상상한 만큼 자유롭게 꾸며보세요.</p>
+      </div>
+      <button id="random" class="random">✧ 랜덤 코디</button>
+    </div>
+
+    <div class="workspace">
+      <aside class="panel left">
+        <div class="panel-title"><h2>꾸미기 상자</h2><span class="step">01 / CREATE</span></div>
+        <div class="head-options">
+          <div class="head-label">호박 얼굴형 <span>6가지</span></div>
+          <div id="headShapes" class="head-grid"></div>
+        </div>
+        <div class="tabs" role="tablist" aria-label="꾸미기 종류">
+          <button class="active" data-tab="eyes" role="tab" aria-selected="true"><span class="tab-icon">◉</span>눈</button>
+          <button data-tab="nose" role="tab" aria-selected="false"><span class="tab-icon">△</span>코</button>
+          <button data-tab="mouth" role="tab" aria-selected="false"><span class="tab-icon">◡</span>입</button>
+          <button data-tab="outfit" role="tab" aria-selected="false"><span class="tab-icon">♢</span>의상</button>
+          <button data-tab="props" role="tab" aria-selected="false"><span class="tab-icon">✦</span>소품</button>
+          <button data-tab="stickers" role="tab" aria-selected="false"><span class="tab-icon">❖</span>스티커</button>
+          <button data-tab="own" role="tab" aria-selected="false"><span class="tab-icon">✎</span>직접</button>
+        </div>
+        <div class="library-content" id="library"></div>
+        <div class="left-foot"><b>작은 팁!</b> 얼굴과 소품을 선택해 움직여보세요.<br>크기와 각도도 자유롭게 바꿀 수 있어요.</div>
+      </aside>
+
+      <section class="stage-card" aria-label="호박 실시간 미리보기">
+        <div class="stage-toolbar">
+          <div class="tool-group">
+            <button class="tool active" id="move" aria-label="선택하고 이동" title="선택 / 이동">↖</button>
+            <button class="tool" id="draw" aria-label="직접 그리기" title="직접 그리기">✎</button>
+            <button class="tool" id="undo" aria-label="되돌리기" title="되돌리기 (Ctrl+Z)">↶</button>
+            <button class="tool" id="redo" aria-label="다시 실행" title="다시 실행 (Ctrl+Shift+Z)">↷</button>
+          </div>
+          <div class="view-label"><i></i> 실시간 미리보기</div>
+          <button class="tool ghost" id="reset" aria-label="처음부터 다시 꾸미기" title="처음부터">⟲</button>
+        </div>
+        <canvas id="stage" width="1000" height="1000" tabindex="0" aria-label="호박 꾸미기 캔버스. 요소를 클릭하거나 터치해서 이동할 수 있습니다."></canvas>
+        <div class="canvas-loading" id="loading">호박 친구를 불러오는 중…</div>
+        <canvas id="platePreview" class="plate-preview" width="1000" height="250" aria-label="네임플레이트 미리보기"></canvas>
+        <div class="stage-caption"><strong id="modeLabel">선택 &amp; 이동</strong><span>드래그로 이동 · 방향키로 미세 조정</span><span>1 : 1</span></div>
+        <div class="brush-controls" id="brushControls">
+          <div class="brush-chips" id="brushChips" role="group" aria-label="붓 종류"></div>
+          <div class="inline">
+            <label for="brushColor">붓 색상</label><input type="color" id="brushColor" value="#6a43c5">
+            <label for="brushSize">굵기</label><input type="range" id="brushSize" min="2" max="40" value="12">
+            <button class="tiny" id="clearInk">그림 지우기</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right">
+        <div class="panel">
+          <div class="panel-title"><h2>나의 호박</h2><span class="step">02 / FINISH</span></div>
+          <div class="right-body">
+            <div>
+              <label class="field" for="pumpkinName">호박 이름</label>
+              <input type="text" id="pumpkinName" maxlength="24" placeholder="예: 겁 많은 호박이" value="나의 할로윈 호박">
+              <label class="field" for="artist" style="margin-top:14px">만든 사람 <small class="field-note">네임플레이트에 새겨져요</small></label>
+              <input type="text" id="artist" maxlength="12" placeholder="닉네임을 입력해주세요">
+            </div>
+            <div class="divider"></div>
+            <div>
+              <span class="field">배경</span>
+              <div class="swatches" id="backgrounds"></div>
+              <span class="field" style="margin-top:18px">호박 색상</span>
+              <div class="swatches" id="skins"></div>
+              <div class="color-control"><label for="faceColor">얼굴 색상</label><input type="color" id="faceColor" value="#271529"></div>
+              <label class="switch-row" for="glow"><span>촛불 발광 <small>눈·코·입 안쪽이 빛나요</small></span><input type="checkbox" id="glow" role="switch"><i aria-hidden="true"></i></label>
+            </div>
+            <div class="divider"></div>
+            <div>
+              <span class="field">네임플레이트</span>
+              <div class="plate-grid" id="plates"></div>
+            </div>
+            <div class="divider"></div>
+            <div class="inspector-block">
+              <span class="field">선택한 요소</span>
+              <select id="layerSelect" aria-label="편집할 요소 선택" style="margin-bottom:12px"></select>
+              <div id="inspector"></div>
+            </div>
+          </div>
+        </div>
+        <div class="save-panel">
+          <h2>완성! 내 호박을 자랑해요.</h2>
+          <p>이미지로 저장하거나, 파티 갤러리에 출품해서 투표를 받아보세요.</p>
+          <label class="export-settings"><input type="checkbox" id="includeName" checked> 이미지에 네임플레이트 넣기</label>
+          <button class="primary" id="save">↓ PNG 이미지 저장</button>
+          <button class="submit-btn" id="submit">🚀 파티 갤러리에 출품하기</button>
+          <details><summary>이용 안내</summary><p>작품은 1인 1개만 출품돼요. 다시 출품하면 새 디자인으로 바뀌고 받은 사탕은 그대로 남아요. 투표는 명예의 전당에서 1인 1표! 작업 중인 호박은 이 브라우저에 자동으로 보관돼요.</p></details>
+        </div>
+      </aside>
+    </div>
+    <div class="footer"><span>PUMPKIN STUDIO · HAPPY HALLOWEEN</span><span>정답 없는 꾸미기, 세상에 하나뿐인 호박.</span></div>
+  </main>
+
+  <!-- ================= Phase 3: 명예의 전당 ================= -->
+  <main id="galleryView" hidden>
+    <div class="intro">
+      <div>
+        <div class="eyebrow">HALL OF FAME</div>
+        <h1>할로윈 <em>명예의 전당</em></h1>
+        <p><span id="galleryCount">0명 참가</span> · 마음에 드는 호박에 🍬 사탕을 던져주세요. 투표는 1인 1표예요.</p>
+      </div>
+      <div class="gallery-actions">
+        <div class="seg" role="group" aria-label="정렬">
+          <button type="button" class="active" data-sort="likes">🏆 득표순</button>
+          <button type="button" data-sort="recent">🕒 최신 등록순</button>
+        </div>
+        <button type="button" id="stealBtn" class="steal-btn">🎲 사탕 뺏기</button>
+        <button type="button" id="awardBtn">🎉 시상식</button>
+      </div>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="gallery-empty" id="galleryEmpty">
+      <div class="empty-icon">🕸️</div>
+      <p>아직 출품된 호박이 없어요.<br>첫 번째 호박의 주인공이 되어보세요!</p>
+      <button type="button" class="primary" data-view="studio">호박 꾸미러 가기</button>
+    </div>
+    <div class="footer"><span>PUMPKIN STUDIO · HALL OF FAME</span><span>가장 많은 사탕을 받은 호박이 오늘의 베스트 드레서!</span></div>
+  </main>
+
+  <dialog id="submitDialog" class="dialog">
+    <form method="dialog">
+      <h2>파티 갤러리에 출품할까요?</h2>
+      <img id="submitPreview" class="submit-preview" alt="출품할 호박 미리보기">
+      <p class="dialog-note" id="submitNote"></p>
+      <div class="dialog-actions"><button value="cancel">취소</button><button value="ok" class="primary">출품하기</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="awardDialog" class="dialog award">
+    <form method="dialog">
+      <div class="eyebrow">AX HALLOWEEN BEST DRESSER</div>
+      <h2>🏆 오늘의 베스트 드레서</h2>
+      <div class="podium" id="podium"></div>
+      <div class="dialog-actions"><button class="primary">닫기</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="quizDialog" class="dialog quiz">
+    <div class="quiz-head">
+      <div><div class="eyebrow">CANDY HEIST · NONSENSE QUIZ</div><h2>🍬 사탕 뺏기</h2></div>
+      <div class="quiz-mine" title="내 작품이 가진 사탕">내 사탕 <b id="quizMine">🍬 0</b></div>
+      <button type="button" class="quiz-x" data-quiz-close aria-label="닫기">✕</button>
+    </div>
+
+    <div id="quizIntro">
+      <ul class="quiz-rules">
+        <li><b>넌센스 퀴즈</b> <span id="quizCount">52</span>문제 중 하나가 랜덤으로 나와요. 답은 직접 적어요!</li>
+        <li class="good">🎉 맞히면 → 다른 사람의 사탕 <b>1개</b>를 랜덤으로 뺏어와요</li>
+        <li class="bad">😱 틀리면 → 정답을 알려주고, 내 사탕 <b>1개</b>가 랜덤으로 다른 사람에게 넘어가요</li>
+        <li class="muted">문제를 본 뒤 창을 닫으면 포기(오답)로 처리돼요.</li>
+      </ul>
+      <button type="button" class="primary wide" id="quizStart">🎃 도전하기</button>
+    </div>
+
+    <form id="quizForm" autocomplete="off"><div id="quizAsk" hidden>
+      <div class="quiz-card"><span class="quiz-no" id="quizNo">Q1</span><p id="quizQuestion"></p></div>
+      <div class="quiz-input-row">
+        <input type="text" id="quizAnswer" maxlength="40" placeholder="정답을 적어주세요" aria-label="정답 입력">
+      </div>
+      <div class="dialog-actions"><button type="button" id="quizGiveUp">포기하기</button><button type="submit" class="primary" id="quizSubmit">정답 제출</button></div>
+    </div></form>
+
+    <div id="quizResult" class="quiz-result" hidden>
+      <div class="quiz-verdict" id="quizVerdict"></div>
+      <p class="quiz-your" id="quizYour"></p>
+      <div class="quiz-answer-box"><span>정답</span><b id="quizRealAnswer"></b><small id="quizRealNote"></small></div>
+      <p class="quiz-outcome" id="quizOutcome"></p>
+      <div class="dialog-actions"><button type="button" data-quiz-close>닫기</button><button type="button" class="primary" id="quizAgain">한 번 더!</button></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <input type="file" id="upload" accept="image/png,image/jpeg,image/webp" hidden>
+</div>
+
+<script src="js/assets.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/customizer.js"></script>
+<script src="js/export.js"></script>
+<script src="js/voting.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/quiz-game.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
