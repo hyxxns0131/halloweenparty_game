@@ -774,7 +774,7 @@
   const MEDALS = ['🥇', '🥈', '🥉'];
   let lastList = [];
   const byLikes = (list) => list.slice().sort((a, b) => b.likes - a.likes || a.createdAt - b.createdAt);
-  const safeImg = (url) => (/^data:image\/(png|jpe?g|webp);base64,/i.test(url) || /^https:\/\//i.test(url) ? url : '');
+  const safeImg = (url) => (/^data:image\/(png|jpe?g|webp);base64,/i.test(url) || /^https:\/\//i.test(url) || /^\/api\/image\?/.test(url) ? url : '');
 
   /* ---------------- 댓글 ---------------- */
   const NICK_KEY = 'axp_nick';
@@ -1039,11 +1039,11 @@
     refresh();
   });
   window.Voting.init().then((m) => {
-    if (m === 'firebase') {
+    if (m === 'supabase') {
       $('syncTag').textContent = '● 실시간 투표 연결됨';
       $('syncTag').classList.add('online');
     } else {
-      $('syncTag').title = 'js/firebase-config.js 를 채우면 참가자 전원이 실시간으로 투표할 수 있어요.';
+      $('syncTag').title = 'js/supabase-config.js 를 채우면 참가자 전원이 실시간으로 함께 볼 수 있어요.';
     }
     window.Voting.onUpdate(renderGallery);
     window.Voting.onComments((all, meta) => {

@@ -13,7 +13,7 @@
   const $ = (id) => document.getElementById(id);
   const BAG_KEY = 'axp_quiz_bag';
   const NEXT_KEY = 'axp_quiz_next';
-  const COOLDOWN_MS = 15000;
+  const COOLDOWN_MS = 15000; // 서버 쿨다운(12초)보다 살짝 길게
 
   // 정답 표기와 다르게 적어도 맞게 쳐 줄 답 (문제 번호 → 별칭)
   const EXTRA = {
@@ -184,7 +184,13 @@
     const myId = window.Voting.myEntry();
     let other = null, err = null;
     try {
-      other = ok ? await stealFromSomeone(myId) : await giveToSomeone(myId);
+      if (window.Voting.mode() === 'supabase') {
+        // 서버가 대상 고르기·이동·쿨다운을 한 번에 처리
+        const r = await window.Voting.candyGame(ok);
+        other = r.moved ? r.other : null;
+      } else {
+        other = ok ? await stealFromSomeone(myId) : await giveToSomeone(myId);
+      }
     } catch (e) {
       err = e;
       console.error(e);

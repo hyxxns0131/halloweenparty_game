@@ -1,0 +1,11 @@
+# 배포에 필요 없는 원본/도구 파일 (이미지는 js/assets.js 에 이미 들어 있음)
+tools
+images/*.png
+images/*.jpg
+images/parts
+images/stickers
+firestore.rules
+readme.md
+.env*
+.vercel
+supabase

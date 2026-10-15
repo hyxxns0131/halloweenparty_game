@@ -178,48 +178,37 @@ python tools/build_assets.py
 * 출품한 사람만 참여 가능, 한 판 끝나면 15초 쉬었다가 다시 도전
 * 문제를 고치려면 `quiz.txt` 를 같은 형식(`번호. 문제` / `- 정답: 답 (설명)`)으로 수정 → 웹에 올린 경우 자동 반영, 파일로 열 때는 `python tools/build_assets.py --quiz-only` 실행
 
-### 30명 실시간 투표 켜기 (Firebase Firestore)
-`js/firebase-config.js` 가 비어 있으면 **로컬 데모 모드**(이 브라우저에만 저장)로 동작합니다.
+### 30명이 함께 쓰기 (Supabase — 로그인 없이 공유)
+`js/supabase-config.js` 가 비어 있으면 **로컬 데모 모드**(이 브라우저에만 저장)로 동작합니다.
 
-1. [Firebase 콘솔](https://console.firebase.google.com)에서 프로젝트 생성 → **Firestore Database** 만들기 (프로덕션 모드)
-2. 프로젝트 설정 → 내 앱 → 웹 앱(`</>`) 추가 → 표시되는 `firebaseConfig` 값을 `js/firebase-config.js` 에 붙여넣기
-3. Firestore → 규칙 탭에 아래 규칙 게시 (출품·±1 투표·댓글 작성만 허용)
+1. [supabase.com](https://supabase.com) → **New project** (무료 플랜, 지역: Northeast Asia (Seoul))
+2. 왼쪽 **SQL Editor** → `supabase/schema.sql` 전체를 붙여넣고 **Run**
+   - 테이블·보안 규칙·쓰기 함수·이미지 버킷(`pumpkins`)·실시간 설정이 한 번에 만들어집니다 (여러 번 실행해도 안전)
+3. **Project Settings → API** 에서 `Project URL` 과 `anon public`(또는 `Publishable`) 키를 `js/supabase-config.js` 에 붙여넣기
+   - `service_role`/`secret` 키는 절대 넣지 마세요
+4. 배포(아래) → 링크 공유. 파티 직전에 `supabase/reset.sql` 로 테스트 데이터를 지우세요.
 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{db}/documents {
-    match /pumpkins/{id} {
-      allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly(['author', 'title', 'imageUrl', 'likes', 'createdAt'])
-        && request.resource.data.likes == 0
-        && request.resource.data.author is string && request.resource.data.author.size() <= 20
-        && request.resource.data.title is string && request.resource.data.title.size() <= 30
-        && request.resource.data.imageUrl is string && request.resource.data.imageUrl.size() < 900000;
-      allow update: if (
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes'])
-          && (request.resource.data.likes - resource.data.likes == 1
-              || request.resource.data.likes - resource.data.likes == -1)
-        ) || (
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['author', 'title', 'imageUrl', 'updatedAt'])
-          && request.resource.data.imageUrl.size() < 900000
-        );
-      allow delete: if false;
-    }
-    match /comments/{id} {
-      allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly(['entryId', 'author', 'text', 'createdAt'])
-        && request.resource.data.entryId is string
-        && request.resource.data.author is string && request.resource.data.author.size() > 0 && request.resource.data.author.size() <= 12
-        && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 100;
-      allow update: if false;
-      allow delete: if true;   // 화면에서는 내가 쓴 댓글에만 삭제 버튼이 보여요
-    }
-  }
-}
-```
+**데이터 구조**
 
-4. GitHub Pages / Vercel / Netlify 에 폴더 전체를 업로드하면 링크 하나로 참가자 모두 접속 가능
+| 테이블 | 내용 |
+|---|---|
+| `entries` | 출품작 (작성자·제목·이미지 경로·사탕 수) — 1인 1작품, 다시 출품하면 교체 |
+| `votes` | 사탕 던지기 (1인 1표) |
+| `comments` | 출품작 댓글 |
+| `candy_log` | 사탕 뺏기 기록 (쿨다운 판정, 비공개) |
+| Storage `pumpkins` | 출품 이미지 (jpg) |
 
-> ℹ️ 1인 1투표는 브라우저 localStorage 로 막기 때문에 다른 브라우저·시크릿 창으로는 재투표가 가능합니다. 사내 파티 규모(30명)에서의 '신뢰 기반' 제한입니다.
-> 갤러리 썸네일은 약 440×550 JPEG(Base64)로 Firestore 문서에 직접 저장되며, 다운로드 PNG는 2000×2500(네임플레이트 포함) 고화질입니다.
+- 로그인 대신 브라우저마다 무작위 UUID 를 만들고, DB 에는 그 **해시만** 저장 → 공개돼도 다른 사람 행세 불가
+- 테이블은 누구나 **읽기만** 가능. 쓰기는 `submit_entry` · `cast_vote` · `candy_game` · `add_comment` · `delete_comment` 함수로만 (해시로 본인 확인, 사탕 이동은 트랜잭션으로 처리해 동시에 해도 음수가 되지 않음)
+- 변경 사항은 Supabase Realtime 으로 모든 화면에 즉시 반영
+
+**무료 플랜 참고**: DB 500MB · 저장소 1GB로 30명 파티엔 충분합니다. 단 **7일 동안 아무 활동이 없으면 프로젝트가 일시 정지**되니, 파티 며칠 전 대시보드에서 상태를 확인하세요 (정지됐으면 Restore 한 번).
+
+### 배포 (무료)
+사이트는 정적 파일뿐이라 어떤 정적 호스팅이든 됩니다.
+
+- **Vercel (현재 사용 중)** — `https://ax-pumpkin-studio.vercel.app` 에 연결돼 있음. 수정 후 `vercel deploy --prod` 한 번이면 반영
+- 대안: **Cloudflare Pages** (무료, 트래픽 무제한, 상업적 이용 가능) · **Netlify** · **GitHub Pages**
+
+> ℹ️ 1인 1투표·1인 1작품은 '브라우저' 기준이라 다른 브라우저·시크릿 창으로는 다시 참여할 수 있습니다. 사내 파티 규모의 '신뢰 기반' 제한입니다.
+> 넌센스 퀴즈 채점은 각자 브라우저에서 하고, 사탕 이동·쿨다운(12초)은 서버 함수가 처리합니다.
