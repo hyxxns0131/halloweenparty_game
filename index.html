@@ -6,6 +6,11 @@
 <title>Pumpkin Studio — AX 할로윈 파티</title>
 <meta name="description" content="나만의 잭오랜턴 피규어를 조립하고, 실시간 투표로 파티 베스트 드레서를 뽑아보세요!">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
+<script>
+  // 이미 인트로를 본 브라우저는 그리기 전에 인트로를 숨겨 깜빡임을 없앤다
+  try { if (localStorage.getItem('axp_intro_seen') === '1' || /^#(studio|gallery)$/.test(location.hash)) document.documentElement.classList.add('intro-seen'); } catch (e) {}
+</script>
+<style>.intro-seen #partyIntro { display: none !important; } .intro-seen #studioApp[aria-hidden="true"] { visibility: visible; }</style>
 <link rel="stylesheet" href="css/studio.css">
 <link rel="stylesheet" href="css/intro.css">
 <link rel="stylesheet" href="css/style.css">

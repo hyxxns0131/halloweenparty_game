@@ -1068,9 +1068,11 @@
     let begun = false, entered = false, frame = 0, start = 0;
     const timers = [];
     const schedule = (fn, ms) => timers.push(setTimeout(fn, ms));
+    const INTRO_KEY = 'axp_intro_seen';
 
     function openStudio(instant) {
       entered = true;
+      try { localStorage.setItem(INTRO_KEY, '1'); } catch (e) { /* noop */ }
       timers.forEach(clearTimeout);
       cancelAnimationFrame(frame);
       intro.classList.add('leaving');
@@ -1085,8 +1087,11 @@
       setTimeout(() => { intro.hidden = true; }, instant || reduced ? 0 : 800);
     }
 
-    // index.html#studio / #gallery 로 열면 인트로를 건너뛴다 (새로고침·파티장 스크린용)
-    if (location.hash === '#studio' || location.hash === '#gallery') {
+    // 인트로는 처음 한 번만: YES 를 한 번 누른 브라우저는 새로고침해도 바로 스튜디오로
+    // (index.html#studio / #gallery 로 열어도 건너뛴다)
+    let seen = false;
+    try { seen = localStorage.getItem(INTRO_KEY) === '1'; } catch (e) { /* noop */ }
+    if (seen || location.hash === '#studio' || location.hash === '#gallery') {
       openStudio(true);
       if (location.hash === '#gallery') showView('gallery');
       return;
