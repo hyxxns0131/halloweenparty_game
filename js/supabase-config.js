@@ -9,6 +9,6 @@
  * 비워 두면 '로컬 데모 모드'(이 브라우저에만 저장)로 동작합니다.
  * ========================================================= */
 window.SUPABASE_CONFIG = {
-  url: '',
-  anonKey: '',
+  url: 'https://lrscsnomlawzspvfpwlk.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxyc2Nzbm9tbGF3enNwdmZwd2xrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwMTQwNTYsImV4cCI6MjEwNzU5MDA1Nn0.1Ij2T0EpnMqlbbpjNOg_5pz89VX0xkXI9CIEe_AMw1I',
 };
