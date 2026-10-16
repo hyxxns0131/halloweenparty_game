@@ -199,6 +199,46 @@ begin
   return json_build_object('moved', true, 'other_id', v_other_id, 'other_author', v_other_author);
 end $$;
 
+-- 사탕 뺏기 · 호박 줄다리기 (1:1 대결) — 이기면 상대에게서 1개, 지면 상대에게 1개
+create or replace function public.candy_duel(p_client uuid, p_target uuid, p_win boolean)
+returns json
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare
+  h text := axp_hash(p_client);
+  v_mine uuid;
+  v_mine_likes integer;
+  v_target_likes integer;
+  v_target_author text;
+begin
+  select id, likes into v_mine, v_mine_likes from entries where owner_hash = h for update;
+  if v_mine is null then raise exception '먼저 내 호박을 출품해야 사탕 뺏기에 참여할 수 있어요!'; end if;
+  if p_target = v_mine then raise exception '나 자신과는 대결할 수 없어요!'; end if;
+
+  if exists (select 1 from candy_log where actor_hash = h and created_at > now() - interval '12 seconds') then
+    raise exception '조금만 쉬었다가 다시 도전해주세요!';
+  end if;
+
+  select likes, author into v_target_likes, v_target_author from entries where id = p_target for update;
+  if v_target_author is null then raise exception '대결 상대를 찾을 수 없어요.'; end if;
+
+  if p_win then
+    insert into candy_log (kind, actor_hash, from_entry, to_entry) values ('steal', h, p_target, v_mine);
+    if v_target_likes <= 0 then return json_build_object('moved', false, 'other_id', p_target, 'other_author', v_target_author); end if;
+    update entries set likes = likes - 1 where id = p_target;
+    update entries set likes = likes + 1 where id = v_mine;
+  else
+    insert into candy_log (kind, actor_hash, from_entry, to_entry) values ('lose', h, v_mine, p_target);
+    if v_mine_likes <= 0 then return json_build_object('moved', false, 'other_id', p_target, 'other_author', v_target_author); end if;
+    update entries set likes = likes - 1 where id = v_mine;
+    update entries set likes = likes + 1 where id = p_target;
+  end if;
+
+  return json_build_object('moved', true, 'other_id', p_target, 'other_author', v_target_author);
+end $$;
+
 -- 댓글 쓰기
 create or replace function public.add_comment(p_client uuid, p_entry uuid, p_author text, p_body text)
 returns uuid
@@ -236,11 +276,13 @@ end $$;
 revoke execute on function public.submit_entry(uuid, text, text, text) from public;
 revoke execute on function public.cast_vote(uuid, uuid)                from public;
 revoke execute on function public.candy_game(uuid, boolean)            from public;
+revoke execute on function public.candy_duel(uuid, uuid, boolean)      from public;
 revoke execute on function public.add_comment(uuid, uuid, text, text)  from public;
 revoke execute on function public.delete_comment(uuid, uuid)           from public;
 grant execute on function public.submit_entry(uuid, text, text, text) to anon, authenticated;
 grant execute on function public.cast_vote(uuid, uuid)                to anon, authenticated;
 grant execute on function public.candy_game(uuid, boolean)            to anon, authenticated;
+grant execute on function public.candy_duel(uuid, uuid, boolean)      to anon, authenticated;
 grant execute on function public.add_comment(uuid, uuid, text, text)  to anon, authenticated;
 grant execute on function public.delete_comment(uuid, uuid)           to anon, authenticated;
 

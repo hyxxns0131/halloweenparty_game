@@ -296,6 +296,17 @@
     return { moved: !!r.moved, other: r.moved ? { id: r.other_id, author: r.other_author } : null };
   }
 
+  // 1:1 대결(줄다리기) 결과 — 이기면 상대 → 나, 지면 나 → 상대로 사탕 1개
+  async function candyDuel(targetId, win) {
+    if (mode === 'supabase') {
+      const r = await rpc('candy_duel', { p_target: targetId, p_win: !!win });
+      await sbFetch();
+      return { moved: !!r.moved };
+    }
+    const myId = (entries.find((e) => e.mine) || {}).id;
+    return { moved: win ? await transferCandy(targetId, myId) : await transferCandy(myId, targetId) };
+  }
+
   async function addComment(entryId, author, text) {
     author = String(author || '').trim().slice(0, NAME_MAX);
     text = String(text || '').trim().slice(0, COMMENT_MAX);
@@ -339,6 +350,7 @@
     vote,
     setSort,
     candyGame,
+    candyDuel,
     transferCandy,
     addComment,
     deleteComment,

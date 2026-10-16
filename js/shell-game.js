@@ -294,7 +294,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     if (!$('shellDialog')) return;
     for (const b of [$('shellStart'), $('shellAgain')]) b.dataset.label = b.textContent;
-    $('stealBtn').onclick = open;
     $('shellStart').onclick = start;
     $('shellAgain').onclick = start;
     for (const b of document.querySelectorAll('[data-shell-close]')) b.onclick = tryClose;

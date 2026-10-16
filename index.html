@@ -220,6 +220,68 @@
     </div>
   </dialog>
 
+  <dialog id="gamePickDialog" class="dialog quiz">
+    <div class="quiz-head">
+      <div><div class="eyebrow">CANDY HEIST</div><h2>🍬 사탕 뺏기</h2></div>
+      <button type="button" class="quiz-x" data-pick-close aria-label="닫기">✕</button>
+    </div>
+    <p class="dialog-note">어떤 게임으로 사탕을 뺏어 볼까요? 이기면 사탕 1개를 가져오고, 지면 1개를 잃어요.</p>
+    <div class="game-pick">
+      <button type="button" class="game-card" data-game="shell"><span class="game-icon">🥤</span><b>야바위</b><small>컵 10개 중 사탕이 든 컵 맞히기</small></button>
+      <button type="button" class="game-card" data-game="tug"><span class="game-icon">🪢</span><b>호박 줄다리기</b><small>20초 동안 연타로 1:1 대결</small></button>
+    </div>
+  </dialog>
+
+  <dialog id="tugDialog" class="dialog quiz tug">
+    <div class="quiz-head">
+      <div><div class="eyebrow">CANDY HEIST · TUG OF WAR</div><h2>🪢 호박 줄다리기</h2></div>
+      <div class="quiz-mine" title="내 작품이 가진 사탕">내 사탕 <b id="tugMine">🍬 0</b></div>
+      <button type="button" class="quiz-x" data-tug-close aria-label="닫기">✕</button>
+    </div>
+
+    <!-- 1) 상대 고르기 -->
+    <div id="tugLobby">
+      <ul class="quiz-rules">
+        <li><b>20초</b> 동안 <b>스페이스바</b>(또는 [당기기!] 버튼)를 연타해 줄을 내 쪽으로 당겨요.</li>
+        <li class="good">🎉 이기면 → 상대의 사탕 <b>1개</b>를 뺏어와요 · 끝까지 당기면 즉시 <b>KO 승리</b>!</li>
+        <li class="bad">😱 지면 → 내 사탕 <b>1개</b>가 상대에게 넘어가요 · 정확히 가운데면 무승부</li>
+      </ul>
+      <div class="tug-list" id="tugList"></div>
+    </div>
+
+    <!-- 2) 수락 대기 · 카운트다운 · 대결 -->
+    <div id="tugMatch" hidden>
+      <div class="tug-overlay" id="tugWait" hidden>
+        <div class="tug-spinner" aria-hidden="true">🎃</div>
+        <p><b id="tugWaitName"></b>님의 수락을 기다리는 중…</p>
+        <button type="button" id="tugWaitCancel">신청 취소</button>
+      </div>
+      <div class="tug-overlay count" id="tugCount" hidden><span id="tugCountNum"></span></div>
+
+      <div class="tug-timer"><div class="tug-timer-bar"><i id="tugTimerFill"></i></div><b id="tugTimerText">20.0초</b></div>
+      <div class="tug-names"><span id="tugMeName"></span><span class="vs">VS</span><span id="tugFoeName"></span></div>
+      <div class="tug-arena" id="tugArena">
+        <div class="tug-center" aria-hidden="true"></div>
+        <div class="tug-line left" aria-hidden="true"></div>
+        <div class="tug-line right" aria-hidden="true"></div>
+        <div class="tug-rope-wrap" id="tugRope">
+          <div class="tug-pumpkin me" id="tugMePk"><span class="pk">🎃</span><span class="hands" aria-hidden="true">✊</span></div>
+          <div class="tug-rope" aria-hidden="true"><span class="tug-ribbon">🎀</span></div>
+          <div class="tug-pumpkin foe" id="tugFoePk"><span class="hands" aria-hidden="true">✊</span><span class="pk">🎃</span></div>
+        </div>
+      </div>
+      <div class="tug-gauge" aria-label="줄 위치"><div class="tug-gauge-me" id="tugGaugeMe"></div><span class="tug-gauge-mid"></span><b id="tugGaugeText">50 : 50</b></div>
+      <button type="button" class="primary wide tug-pull" id="tugPull" disabled>💪 당기기! <small>(스페이스바)</small></button>
+
+      <div id="tugResult" class="quiz-result" hidden>
+        <div class="quiz-verdict" id="tugVerdict"></div>
+        <p class="tug-score" id="tugScore"></p>
+        <p class="quiz-outcome" id="tugOutcome"></p>
+        <div class="dialog-actions"><button type="button" id="tugLobbyBtn">로비로 나가기</button><button type="button" class="primary" id="tugAgain">다시 하기</button></div>
+      </div>
+    </div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <input type="file" id="upload" accept="image/png,image/jpeg,image/webp" hidden>
 </div>
@@ -230,6 +292,7 @@
 <script src="js/export.js"></script>
 <script src="js/voting.js"></script>
 <script src="js/shell-game.js"></script>
+<script src="js/tug-game.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

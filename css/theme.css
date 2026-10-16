@@ -281,3 +281,90 @@ details, summary { color: var(--muted); }
 .cup.answer::after { content: '여기!'; position: absolute; left: 50%; top: -22%; transform: translateX(-50%); font-size: 12px; font-weight: 900; color: #1a0a00; background: #9ff0b0; padding: 2px 8px; border-radius: 10px; z-index: 4; white-space: nowrap; }
 #shellResult { margin-top: 12px; }
 #shellStart:disabled, #shellAgain:disabled { opacity: 0.6; }
+
+/* ---------------- 사탕 뺏기: 게임 선택 ---------------- */
+.game-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.game-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px 12px; border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 140, 50, 0.3); color: var(--ink); text-align: center;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.game-card:hover, .game-card:focus-visible { transform: translateY(-3px); border-color: var(--orange); box-shadow: var(--glow); background: rgba(255, 140, 50, 0.08); }
+.game-card .game-icon { font-size: 42px; line-height: 1; }
+.game-card b { font-size: 17px; }
+.game-card small { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+/* ---------------- 사탕 뺏기: 호박 줄다리기 ---------------- */
+.dialog.tug { width: min(640px, calc(100vw - 24px)); }
+.tug-list { display: grid; gap: 8px; max-height: min(46vh, 360px); overflow-y: auto; padding-right: 2px; }
+.tug-foe { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); }
+.tug-foe img { width: 46px; height: 46px; border-radius: 12px; object-fit: cover; background: #0c0714; flex: none; }
+.tug-foe-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tug-foe-info b, .tug-foe-info small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tug-foe-info small { color: var(--muted); font-size: 12px; }
+.tug-foe button { flex: none; padding: 8px 14px; font-size: 13px; }
+
+#tugMatch { position: relative; }
+.tug-overlay {
+  position: absolute; inset: -6px; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: rgba(14, 8, 24, 0.9); border-radius: 18px; text-align: center; font-size: 16px; backdrop-filter: blur(2px);
+}
+.tug-overlay[hidden] { display: none; }
+.tug-overlay p { margin: 0; } .tug-overlay b { color: #ffc58f; }
+.tug-spinner { font-size: 52px; animation: tugBob 0.9s ease-in-out infinite; }
+@keyframes tugBob { 50% { transform: translateY(-10px) rotate(-10deg); } }
+.tug-overlay.count span { font-size: clamp(56px, 14vw, 96px); font-weight: 900; color: #ffc58f; text-shadow: 0 0 30px rgba(255, 140, 50, 0.8); }
+.tug-overlay.count span.pop { animation: tugPopIn 0.55s cubic-bezier(0.2, 1.6, 0.4, 1); }
+@keyframes tugPopIn { from { transform: scale(2.4); opacity: 0; } }
+
+.tug-timer { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.tug-timer-bar { flex: 1; height: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.tug-timer-bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #ff8c32, #ffc58f); border-radius: inherit; }
+.tug-timer-bar i.hurry { background: linear-gradient(90deg, #ff4d4d, #ff9b9b); animation: statusPulse 0.5s ease-in-out infinite; }
+.tug-timer b { min-width: 58px; text-align: right; font-variant-numeric: tabular-nums; color: #ffc58f; }
+.tug-names { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 800; font-size: 14px; margin-bottom: 6px; }
+.tug-names span:first-child { color: #ffc58f; } .tug-names span:last-child { color: #c9adff; text-align: right; }
+.tug-names .vs { font-size: 12px; color: var(--muted); }
+
+.tug-arena {
+  position: relative; width: 100%; aspect-ratio: 5 / 2; border-radius: 18px; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 130%, rgba(255, 140, 50, 0.25), transparent 60%), linear-gradient(180deg, #2a1640, #160c22);
+  border: 1px solid rgba(255, 140, 50, 0.3); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+.tug-center { position: absolute; left: 50%; top: 8%; bottom: 8%; border-left: 2px dashed rgba(255, 255, 255, 0.35); }
+.tug-line { position: absolute; top: 14%; bottom: 14%; width: 3px; border-radius: 2px; }
+.tug-line.left { left: 28%; background: rgba(255, 160, 70, 0.6); }
+.tug-line.right { left: 72%; background: rgba(170, 120, 255, 0.6); }
+.tug-rope-wrap { position: absolute; inset: 0; transition: transform 0.08s linear; }
+.tug-rope {
+  position: absolute; left: 6%; right: 6%; top: 58%; height: 9px; transform: translateY(-50%); border-radius: 5px;
+  background: repeating-linear-gradient(60deg, #c98b4a 0 7px, #8a5626 7px 12px); box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45);
+}
+.tug-ribbon { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -55%); font-size: clamp(22px, 5vw, 32px); filter: drop-shadow(0 0 8px rgba(255, 90, 140, 0.8)); }
+.tug-pumpkin { position: absolute; top: 58%; display: flex; align-items: center; transform: translateY(-62%); transition: rotate 0.2s; z-index: 2; }
+.tug-pumpkin.me { right: 76%; transform-origin: 70% 90%; }
+.tug-pumpkin.foe { left: 76%; transform-origin: 30% 90%; }
+.tug-pumpkin .pk { font-size: clamp(42px, 11vw, 72px); line-height: 1; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5)); }
+.tug-pumpkin.foe .pk { filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.5)) hue-rotate(230deg) saturate(1.2); }
+.tug-pumpkin .hands { font-size: clamp(16px, 4vw, 24px); margin-top: 18%; }
+.tug-pumpkin.me { rotate: -6deg; } .tug-pumpkin.foe { rotate: 6deg; }
+.tug-pumpkin.me.winning { rotate: -14deg; } .tug-pumpkin.foe.winning { rotate: 14deg; }
+.tug-pumpkin.heave .pk { animation: tugHeave 0.18s ease-out; }
+@keyframes tugHeave { 40% { transform: translateX(-5px) scale(1.08, 0.94); } }
+.tug-pop { position: absolute; top: 18%; font-weight: 900; font-size: 15px; pointer-events: none; animation: tugPopUp 0.65s ease-out forwards; z-index: 5; }
+.tug-pop.me { left: 12%; color: #ffc58f; text-shadow: 0 0 10px rgba(255, 140, 50, 0.9); }
+.tug-pop.foe { right: 12%; color: #c9adff; text-shadow: 0 0 10px rgba(150, 100, 255, 0.9); }
+@keyframes tugPopUp { to { transform: translate(var(--dx), -30px) scale(1.2); opacity: 0; } }
+.tug-arena.ko-win { animation: shake 0.45s; box-shadow: inset 0 0 50px rgba(120, 230, 140, 0.45); }
+.tug-arena.ko-lose { animation: shake 0.45s; box-shadow: inset 0 0 50px rgba(255, 90, 90, 0.45); }
+
+.tug-gauge { position: relative; height: 22px; margin: 12px 0; border-radius: 12px; overflow: hidden; background: linear-gradient(90deg, #7d4bd6, #a77bff); border: 1px solid var(--line); }
+.tug-gauge-me { position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: linear-gradient(90deg, #ff8c32, #ffb469); transition: width 0.08s linear; }
+.tug-gauge-mid { position: absolute; left: 50%; top: 0; bottom: 0; border-left: 2px solid rgba(255, 255, 255, 0.8); }
+.tug-gauge b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 12px; color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); font-variant-numeric: tabular-nums; }
+.tug-pull { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.tug-pull:active:not(:disabled) { transform: scale(0.97); }
+.tug-pull:disabled { opacity: 0.5; }
+.tug-pull small { font-weight: 600; opacity: 0.75; font-size: 12px; }
+#tugResult { margin-top: 12px; }
+.tug-score { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
