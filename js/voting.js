@@ -355,6 +355,7 @@
     addComment,
     deleteComment,
     mode: () => mode,
+    client: () => (mode === 'supabase' ? sb.client : null), // 실시간 대결(줄다리기)용
     entries: () => sorted(),
     onUpdate: (fn) => { subs.add(fn); fn(sorted(), { mode, sortBy }); },
     onComments: (fn) => { commentSubs.add(fn); fn(comments, {}); },

@@ -242,18 +242,21 @@
     <!-- 1) 상대 고르기 -->
     <div id="tugLobby">
       <ul class="quiz-rules">
+        <li>지금 접속 중인 참가자에게 <b>대결 신청</b> → 상대가 <b>수락</b>하면 바로 1:1 대결!</li>
         <li><b>20초</b> 동안 <b>스페이스바</b>(또는 [당기기!] 버튼)를 연타해 줄을 내 쪽으로 당겨요.</li>
         <li class="good">🎉 이기면 → 상대의 사탕 <b>1개</b>를 뺏어와요 · 끝까지 당기면 즉시 <b>KO 승리</b>!</li>
         <li class="bad">😱 지면 → 내 사탕 <b>1개</b>가 상대에게 넘어가요 · 정확히 가운데면 무승부</li>
       </ul>
+      <p class="tug-lobby-note" id="tugLobbyNote"></p>
       <div class="tug-list" id="tugList"></div>
+      <button type="button" class="tug-practice" id="tugPractice">🤖 봇과 연습하기 <small>(사탕 이동 없음)</small></button>
     </div>
 
     <!-- 2) 수락 대기 · 카운트다운 · 대결 -->
     <div id="tugMatch" hidden>
       <div class="tug-overlay" id="tugWait" hidden>
         <div class="tug-spinner" aria-hidden="true">🎃</div>
-        <p><b id="tugWaitName"></b>님의 수락을 기다리는 중…</p>
+        <p id="tugWaitMsg"></p>
         <button type="button" id="tugWaitCancel">신청 취소</button>
       </div>
       <div class="tug-overlay count" id="tugCount" hidden><span id="tugCountNum"></span></div>
@@ -271,6 +274,7 @@
         </div>
       </div>
       <div class="tug-gauge" aria-label="줄 위치"><div class="tug-gauge-me" id="tugGaugeMe"></div><span class="tug-gauge-mid"></span><b id="tugGaugeText">50 : 50</b></div>
+      <p class="shell-status" id="tugStatus" aria-live="polite"></p>
       <button type="button" class="primary wide tug-pull" id="tugPull" disabled>💪 당기기! <small>(스페이스바)</small></button>
 
       <div id="tugResult" class="quiz-result" hidden>
@@ -280,6 +284,13 @@
         <div class="dialog-actions"><button type="button" id="tugLobbyBtn">로비로 나가기</button><button type="button" class="primary" id="tugAgain">다시 하기</button></div>
       </div>
     </div>
+  </dialog>
+
+  <dialog id="tugInviteDialog" class="dialog quiz tug-invite">
+    <div class="tug-spinner" aria-hidden="true">🪢</div>
+    <h2><b id="tugInviteName"></b>님이<br>호박 줄다리기 대결을 신청했어요!</h2>
+    <p class="dialog-note">이기면 상대의 사탕 1개를 뺏고, 지면 내 사탕 1개를 줘요. <span id="tugInviteLeft"></span></p>
+    <div class="dialog-actions"><button type="button" id="tugDecline">거절</button><button type="button" class="primary" id="tugAccept">수락!</button></div>
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

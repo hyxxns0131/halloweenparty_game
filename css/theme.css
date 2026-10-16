@@ -368,3 +368,15 @@ details, summary { color: var(--muted); }
 .tug-pull small { font-weight: 600; opacity: 0.75; font-size: 12px; }
 #tugResult { margin-top: 12px; }
 .tug-score { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.tug-lobby-note { margin: 0 0 8px; font-size: 12px; color: var(--muted); }
+.tug-foe.off, .tug-foe.busy { opacity: 0.55; }
+.tug-foe button:disabled { opacity: 0.5; cursor: not-allowed; }
+.tug-practice { width: 100%; margin-top: 12px; padding: 11px; border-style: dashed; font-weight: 700; }
+.tug-practice small { font-weight: 500; color: var(--muted); }
+#tugStatus { margin: 0 0 8px; min-height: 1.2em; }
+#tugStatus:empty { display: none; }
+.dialog.tug-invite { width: min(400px, calc(100vw - 32px)); text-align: center; }
+.dialog.tug-invite h2 { font-size: 19px; line-height: 1.45; margin: 6px 0 10px; }
+.dialog.tug-invite h2 b { color: #ffc58f; }
+.dialog.tug-invite .dialog-actions { justify-content: center; margin-top: 16px; }
+.dialog.tug-invite .dialog-actions button { min-width: 110px; padding: 12px; }
