@@ -931,7 +931,14 @@
       const btn = el('button', 'candy-btn' + (voted ? ' voted' : ''), voted ? '🍬 던졌어요! (취소)' : '🎃 사탕 던지기');
       btn.type = 'button';
       btn.onclick = () => handleVote(entry, btn);
-      card.append(fig, body, btn, commentSection(entry));
+      card.append(fig, body, btn);
+      if (entry.id === mine) {
+        const del = el('button', 'delete-entry-btn', '🗑 내 작품 삭제');
+        del.type = 'button';
+        del.onclick = () => handleDeleteEntry(entry, del);
+        card.append(del);
+      }
+      card.append(commentSection(entry));
       grid.append(card);
     }
     for (const card of grid.children) {
@@ -948,6 +955,20 @@
         try { t.setSelectionRange(focus.pos, focus.pos); } catch (e) { /* noop */ }
       }
     }
+  }
+
+  async function handleDeleteEntry(entry, btn) {
+    if (!confirm(`'${entry.title || '나의 할로윈 호박'}' 작품을 삭제할까요?\n받은 사탕 ${entry.likes}개와 댓글도 함께 사라지고 되돌릴 수 없어요.`)) return;
+    btn.disabled = true;
+    try {
+      await window.Voting.deleteEntry();
+      toast('내 작품을 삭제했어요. 다시 꾸며서 출품할 수 있어요.');
+    } catch (err) {
+      console.error(err);
+      toast('삭제하지 못했어요: ' + err.message);
+      btn.disabled = false;
+    }
+    renderGallery(window.Voting.entries());
   }
 
   async function handleVote(entry, btn) {

@@ -80,6 +80,8 @@ create policy "public read entries"  on public.entries  for select to anon, auth
 create policy "public read votes"    on public.votes    for select to anon, authenticated using (true);
 create policy "public read comments" on public.comments for select to anon, authenticated using (true);
 
+grant usage on schema public to anon, authenticated;
+grant select on public.entries, public.votes, public.comments to anon, authenticated;
 revoke insert, update, delete, truncate on public.entries, public.votes, public.comments, public.candy_log from anon, authenticated;
 revoke select on public.candy_log from anon, authenticated;
 
@@ -273,18 +275,32 @@ begin
   if not found then raise exception '내가 쓴 댓글만 지울 수 있어요.'; end if;
 end $$;
 
+-- 내 작품 삭제 (투표·댓글은 함께 지워지고, 그 작품에 던진 사탕은 사라짐)
+create or replace function public.delete_entry(p_client uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+begin
+  delete from entries where owner_hash = axp_hash(p_client);
+  if not found then raise exception '삭제할 내 작품이 없어요.'; end if;
+end $$;
+
 revoke execute on function public.submit_entry(uuid, text, text, text) from public;
 revoke execute on function public.cast_vote(uuid, uuid)                from public;
 revoke execute on function public.candy_game(uuid, boolean)            from public;
 revoke execute on function public.candy_duel(uuid, uuid, boolean)      from public;
 revoke execute on function public.add_comment(uuid, uuid, text, text)  from public;
 revoke execute on function public.delete_comment(uuid, uuid)           from public;
+revoke execute on function public.delete_entry(uuid)                   from public;
 grant execute on function public.submit_entry(uuid, text, text, text) to anon, authenticated;
 grant execute on function public.cast_vote(uuid, uuid)                to anon, authenticated;
 grant execute on function public.candy_game(uuid, boolean)            to anon, authenticated;
 grant execute on function public.candy_duel(uuid, uuid, boolean)      to anon, authenticated;
 grant execute on function public.add_comment(uuid, uuid, text, text)  to anon, authenticated;
 grant execute on function public.delete_comment(uuid, uuid)           to anon, authenticated;
+grant execute on function public.delete_entry(uuid)                   to anon, authenticated;
 
 -- ---------------------------------------------------------
 -- 실시간: 출품작·투표·댓글이 바뀌면 모든 화면에 즉시 반영
