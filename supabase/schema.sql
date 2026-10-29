@@ -80,6 +80,8 @@ create policy "public read entries"  on public.entries  for select to anon, auth
 create policy "public read votes"    on public.votes    for select to anon, authenticated using (true);
 create policy "public read comments" on public.comments for select to anon, authenticated using (true);
 
+grant usage on schema public to anon, authenticated;
+grant select on public.entries, public.votes, public.comments to anon, authenticated;
 revoke insert, update, delete, truncate on public.entries, public.votes, public.comments, public.candy_log from anon, authenticated;
 revoke select on public.candy_log from anon, authenticated;
 
