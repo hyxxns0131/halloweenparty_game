@@ -11,7 +11,7 @@
   'use strict';
 
   const S = 1000;
-  const A = window.ASSETS || {};
+  const A = Object.assign({}, window.ASSETS || {}, window.ACC_ASSETS || {});
   const img = {};
   const sprites = {};
 
