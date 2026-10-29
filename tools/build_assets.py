@@ -195,6 +195,9 @@ def main():
         "bgVillage": HALLOWEEN / "bg_village.webp",
         "bgForest": HALLOWEEN / "bg_forest.webp",
     }
+    # 악세서리 입체 이미지 (images/parts/accessories/*.webp → acc_<kind>)
+    for f in sorted((PARTS / "accessories").glob("*.webp")):
+        assets["acc_" + f.stem] = f
     lines = [
         "/* 자동 생성 파일 — tools/build_assets.py 로 다시 만드세요. 직접 수정하지 마세요. */",
         "window.ASSETS = {",

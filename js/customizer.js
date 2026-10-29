@@ -88,16 +88,16 @@
   // README 의 악세서리 10종 (머리/얼굴 · 등/날개 · 손 소품)
   const ACCESSORIES = [
     { group: '머리 / 얼굴', name: '뾰족 마녀 모자', o: { type: 'prop', index: 3, x: 520, y: 165, w: 340, h: 340 } },
-    { group: '머리 / 얼굴', name: '미니 박쥐 머리띠', o: { type: 'acc', kind: 'batband', x: 500, y: 190, w: 560, h: 220 } },
+    { group: '머리 / 얼굴', name: '미니 박쥐 머리띠', o: { type: 'acc', kind: 'batband', x: 500, y: 175, w: 520, h: 330 } },
     { group: '머리 / 얼굴', name: '해골 핀', o: { type: 'prop', index: 4, x: 700, y: 255, w: 120, h: 120, rotation: 12 } },
-    { group: '머리 / 얼굴', name: '호박 꼭지 리본', o: { type: 'acc', kind: 'ribbon', x: 560, y: 200, w: 170, h: 110 } },
-    { group: '머리 / 얼굴', name: '똥 모자', o: { type: 'acc', kind: 'poop', x: 505, y: 140, w: 300, h: 260 } },
+    { group: '머리 / 얼굴', name: '호박 꼭지 리본', o: { type: 'acc', kind: 'ribbon', x: 560, y: 200, w: 170, h: 125 } },
+    { group: '머리 / 얼굴', name: '똥 모자', o: { type: 'acc', kind: 'poop', x: 505, y: 140, w: 300, h: 250 } },
     { group: '등 / 날개', name: '박쥐 날개', o: { type: 'acc', kind: 'wings', x: 500, y: 700, w: 800, h: 330, behind: true } },
-    { group: '등 / 날개', name: '악마 꼬리', o: { type: 'acc', kind: 'tail', x: 700, y: 820, w: 210, h: 230, behind: true } },
-    { group: '등 / 날개', name: '거미줄 망토', o: { type: 'acc', kind: 'webcape', x: 500, y: 805, w: 600, h: 290, behind: true } },
-    { group: '손 소품', name: '미니 사탕 바구니', o: { type: 'acc', kind: 'basket', x: 735, y: 845, w: 160, h: 160 } },
+    { group: '등 / 날개', name: '악마 꼬리', o: { type: 'acc', kind: 'tail', x: 700, y: 820, w: 230, h: 202, behind: true } },
+    { group: '등 / 날개', name: '거미줄 망토', o: { type: 'acc', kind: 'webcape', x: 500, y: 805, w: 600, h: 317, behind: true } },
+    { group: '손 소품', name: '미니 사탕 바구니', o: { type: 'acc', kind: 'basket', x: 735, y: 845, w: 150, h: 163 } },
     { group: '손 소품', name: '마법 지팡이', o: { type: 'prop', index: 10, x: 255, y: 745, w: 210, h: 210, rotation: -20 } },
-    { group: '손 소품', name: '잭오랜턴 미니 램프', o: { type: 'acc', kind: 'lantern', x: 745, y: 855, w: 120, h: 180 } },
+    { group: '손 소품', name: '잭오랜턴 미니 램프', o: { type: 'acc', kind: 'lantern', x: 745, y: 855, w: 140, h: 168 } },
   ];
 
   const EMOJIS = [['🎩', '마술 모자'], ['👑', '왕관'], ['🎀', '리본'], ['🕶️', '선글라스'], ['👓', '안경'], ['🦇', '박쥐'], ['👻', '유령'], ['🕷️', '거미'], ['🍭', '사탕'], ['🍬', '캔디'], ['🌙', '달'], ['⭐', '별'], ['💜', '하트'], ['🩸', '핏방울'], ['⚡', '번개']];
@@ -709,6 +709,14 @@
 
   // 벡터 악세서리: -50..50 정규 좌표계에 그린 뒤 박스 크기로 늘린다
   function paintAcc(c, kind, w, h) {
+    // 입체 이미지가 있으면 그걸로 (박스 안에 비율 유지, 가운데 정렬)
+    const art = img['acc_' + kind];
+    if (art) {
+      const f = Math.min(w / art.naturalWidth, h / art.naturalHeight);
+      const dw = art.naturalWidth * f, dh = art.naturalHeight * f;
+      c.drawImage(art, -dw / 2, -dh / 2, dw, dh);
+      return;
+    }
     c.save();
     c.scale(w / 100, h / 100);
     c.lineJoin = 'round';

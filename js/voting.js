@@ -338,6 +338,22 @@
     refreshLocalComments();
   }
 
+  // 내 작품 삭제 (로그인 없이: 이 브라우저의 client id 로 본인 확인)
+  async function deleteEntry() {
+    if (mode === 'supabase') {
+      await rpc('delete_entry', {});
+      await sbFetch();
+      return;
+    }
+    const mine = lsGet(LS_MINE);
+    if (!mine) throw new Error('삭제할 내 작품이 없어요.');
+    writeLocal(readLocal().filter((e) => e.id !== mine));
+    lsSet(LS_COMMENTS, JSON.stringify(readJSON(LS_COMMENTS).filter((c) => c.entryId !== mine)));
+    try { if (lsGet(LS_VOTE) === mine) localStorage.removeItem(LS_VOTE); localStorage.removeItem(LS_MINE); } catch (e) { /* noop */ }
+    refreshLocal();
+    refreshLocalComments();
+  }
+
   function setSort(s) {
     if (s === sortBy) return;
     sortBy = s;
@@ -354,6 +370,7 @@
     transferCandy,
     addComment,
     deleteComment,
+    deleteEntry,
     mode: () => mode,
     client: () => (mode === 'supabase' ? sb.client : null), // 실시간 대결(줄다리기)용
     entries: () => sorted(),
