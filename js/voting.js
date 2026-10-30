@@ -216,6 +216,9 @@
     f.likes -= 1;
     t.likes = (t.likes || 0) + 1;
     writeLocal(list);
+    const history = readJSON('axp_candy_transfers');
+    history.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2), from: fromId, to: toId, fromAuthor: f.author, toAuthor: t.author, created_at: new Date().toISOString() });
+    lsSet('axp_candy_transfers', JSON.stringify(history));
     refreshLocal();
     return true;
   }
@@ -365,6 +368,13 @@
     submit,
     vote,
     setSort,
+    candyHistory: async (before = null) => {
+      if (mode === 'supabase') return (await rpc('my_candy_history', { p_before: before })) || [];
+      const mine = lsGet(LS_MINE);
+      const rows = readJSON('axp_candy_transfers').filter((r) => r.from === mine || r.to === mine).reverse();
+      const offset = before === null ? 0 : rows.findIndex((r) => r.id === before) + 1;
+      return rows.slice(offset, offset + 100).map((r) => ({ id: r.id, direction: r.to === mine ? 'gained' : 'lost', other_author: r.to === mine ? r.fromAuthor : r.toAuthor, created_at: r.created_at }));
+    },
     candyGame,
     candyDuel,
     transferCandy,
