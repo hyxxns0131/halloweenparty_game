@@ -43,6 +43,7 @@
     </nav>
     <div class="header-right">
       <span class="tag" id="syncTag" title="">Make it spooky. Make it you.</span>
+      <button type="button" id="candyHistoryBtn">🍬 사탕 기록</button>
       <button class="primary" id="saveTop">↓ 이미지 저장</button>
     </div>
   </header>
@@ -293,6 +294,18 @@
     <div class="dialog-actions"><button type="button" id="tugDecline">거절</button><button type="button" class="primary" id="tugAccept">수락!</button></div>
   </dialog>
 
+  <dialog id="candyHistoryDialog" class="dialog candy-history" aria-labelledby="candyHistoryTitle">
+    <div class="history-heading"><h2 id="candyHistoryTitle">🍬 내 사탕 기록</h2><button type="button" id="candyHistoryClose" aria-label="기록 닫기">닫기</button></div>
+    <p class="dialog-note">기록 기능이 추가된 이후, 사탕 뺏기에서 실제로 주고받은 내역만 보여요.</p>
+    <div class="history-filters" role="group" aria-label="사탕 기록 종류">
+      <button type="button" data-history="all" aria-pressed="true">전체</button>
+      <button type="button" data-history="lost" aria-pressed="false">뺏긴 기록</button>
+      <button type="button" data-history="gained" aria-pressed="false">얻은 기록</button>
+    </div>
+    <p id="candyHistoryStatus" role="status" aria-live="polite"></p>
+    <ul id="candyHistoryList"></ul>
+    <div class="dialog-actions"><button type="button" id="candyHistoryMore" hidden>이전 기록 더 보기</button><button type="button" id="candyHistoryRefresh">새로고침</button></div>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <input type="file" id="upload" accept="image/png,image/jpeg,image/webp" hidden>
 </div>
@@ -306,5 +319,6 @@
 <script src="js/shell-game.js"></script>
 <script src="js/tug-game.js"></script>
 <script src="js/app.js"></script>
+<script src="js/candy-history.js"></script>
 </body>
 </html>
